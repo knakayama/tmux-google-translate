@@ -15,7 +15,25 @@ get_tmux_option() {
 cmd_exists() {
   local cmd="$1"
 
-  type "$cmd" >/dev/null 2>&1
+  if type "$cmd" >/dev/null 2>&1; then
+    return 0
+  else
+    [[ -x "${ANTIBODY_HOME}/soimort-translate-shell/translate" ]] && return 0
+  fi
+
+  return 1
+}
+
+cmd_path() {
+  local cmd="trans"
+
+  if type "$cmd" >/dev/null 2>&1; then
+    echo "$cmd"
+  else
+    cmd="${ANTIBODY_HOME}/soimort-translate-shell/translate"
+
+    [[ -x "$cmd" ]] && echo "$cmd"
+  fi
 }
 
 # Ensures a message is displayed for 5 seconds in tmux prompt.
